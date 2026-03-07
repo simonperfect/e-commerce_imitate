@@ -1,9 +1,20 @@
-from flask_restful import Resource,reqparse
+import sys
+import os
 
-from IIIflask_shop import models
-from IIIflask_shop.product import product_api
-from IIIflask_shop import db
+# 添加路徑
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
 
+# 導入第三方庫
+from flask import request, jsonify
+from flask_restful import Resource, reqparse
+
+# 導入項目模塊
+from product import product_api
+from models import db
+from models import Product 
 
 
 class Products(Resource):

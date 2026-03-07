@@ -1,14 +1,23 @@
 #charset=utf-8
-from IIIflask_shop.user import user_bp,user_api
+import sys
+import os
 
-from flask_restful import Resource,reqparse
-from IIIflask_shop import db,models
-import re     #正則   驗證phone number
-from IIIflask_shop.utils.token import generate_token,verify_token,login_required
+# 添加路徑（這是最關鍵的！）
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
 
-
+# 現在開始導入
 from flask import request
+from flask_restful import Resource, reqparse
+import re
 
+# 導入項目內的模塊
+from user import user_bp, user_api
+from models import db
+from models import Userform  # 假設你的模型類叫 Userform
+from utils.token import generate_token, verify_token, login_required
 #創建視圖
 @user_bp.route('/')
 def index():
@@ -33,7 +42,7 @@ def login():
         return {'status':400,'msg':'參數不完整'}
     else:
         #查詢數據庫   通過用戶名獲取用戶對象
-        user = models.Userform.query.filter(models.Userform.name == name).first()
+        user = Userform.query.filter(Userform.name == name).first()
 
         if user:   #如果user有值的話
             #判斷密碼是否正確
@@ -68,9 +77,9 @@ class Regist_users(Resource):   #get數據是獲取數據list
 
         #獲取用戶列表
         if name:
-            user_list = models.Userform.query.filter(models.Userform.name.like(f'%{name}%')).paginate(page=pnum,per_page=psize)     #.paginate(pnum, psize) 是一個常見的分頁方法
+            user_list = Userform.query.filter(Userform.name.like(f'%{name}%')).paginate(page=pnum,per_page=psize)     #.paginate(pnum, psize) 是一個常見的分頁方法
         else:  #不傳name
-            user_list = models.Userform.query.paginate(page=pnum,per_page=psize)
+            user_list = Userform.query.paginate(page=pnum,per_page=psize)
         data = {
             'total':user_list.total,
             'pnum':pnum,
@@ -116,7 +125,7 @@ class Regist_users(Resource):   #get數據是獲取數據list
         
         #判斷是否有重複的用戶
         try:
-            user = models.Userform.query.filter(models.Userform.name == name).first()
+            user = Userform.query.filter(Userform.name == name).first()
             if user:
                 return{'msg':'用戶名已經存在','status':400}
         except Exception as e:
@@ -124,9 +133,9 @@ class Regist_users(Resource):   #get數據是獲取數據list
 
         #創建用戶對象   
         if role_id:  #if there have role id 
-            user = models.Userform(name=name, password=pwd,nick_name=nick_name,phone=phone,email=email,role_id=role_id)
+            user = Userform(name=name, password=pwd,nick_name=nick_name,phone=phone,email=email,role_id=role_id)
         else:    
-            user = models.Userform(name=name, password=pwd,nick_name=nick_name,phone=phone,email=email)
+            user = Userform(name=name, password=pwd,nick_name=nick_name,phone=phone,email=email)
         #保存數據
         db.session.add(user)
         db.session.commit()
@@ -138,7 +147,7 @@ user_api.add_resource(Regist_users,'/register/')
  #單體數據内容   個人
 class User(Resource):
     def get(self,id):
-        user = models.Userform.query.get(id)
+        user = Userform.query.get(id)
         if user:
             return {'status':200,'msg':'Query successful','data':user.to_dict()} 
         else:
@@ -147,7 +156,7 @@ class User(Resource):
 
     def put(self,id):   #修改用戶信息
         try:
-            user = models.Userform.query.get(id)
+            user = Userform.query.get(id)
             #   create RequestParser object to recieve data
             parser = reqparse.RequestParser()   
             # 定义允许接收的参数
@@ -183,7 +192,7 @@ class User(Resource):
          
     def delete(self,id):
         try:
-            user = models.Userform.query.get(id)
+            user = Userform.query.get(id)
             if user:
                 db.session.delete(user)
                 db.session.commit()
@@ -200,7 +209,7 @@ user_api.add_resource(User,'/user/<int:id>/')
 @user_bp.route('/reset_pwd/<int:id>/')   #爲什麽不用restful方法也就是add_resource 這是因爲這個只是很簡單的一個方法  沒有上面那麽複雜的depete put post等等的function
 def reset_pwd(id):
     try:
-        user = models.Userform.query.get(id)
+        user = Userform.query.get(id)
         user.password = '123456'
         db.session.commit()
         return {'status':200, 'msg':'verification successful, the password is 123456'}

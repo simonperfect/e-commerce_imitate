@@ -1,6 +1,5 @@
 #轉移manager配置對象過來
 
-
 from flask import Flask
 import os        
 from flask_sqlalchemy import SQLAlchemy
@@ -8,7 +7,7 @@ from flask_migrate import Migrate
 
 
 #引入config
-from .config import config_map
+from config import config_map
 
 #創建SQLAlchemy實例
 db = SQLAlchemy()
@@ -28,37 +27,36 @@ def create_app(config_name):
     #初始化db
     db.init_app(app)
     
-    #獲取藍圖user
-    from IIIflask_shop.user import user_bp
+    #獲取藍圖user - 使用 sys.path 添加當前目錄
+    import sys
+    import os
+    sys.path.append(os.path.dirname(__file__))
+    
+    from user import user_bp
     #注冊藍圖 第一個table   
     app.register_blueprint(user_bp)
 
 
     #第二個table
-    from IIIflask_shop.menu import menu_bp
+    from menu import menu_bp
     app.register_blueprint(menu_bp)
 
 
     #role character
-    from IIIflask_shop.role import role_bp
+    from role import role_bp
     app.register_blueprint(role_bp)
 
     #get category object
-    from IIIflask_shop.category import cate_bp
+    from category import cate_bp
     app.register_blueprint(cate_bp)
 
 
     #attribute from category
-    from IIIflask_shop.category import attr_bp
+    from category import attr_bp
     app.register_blueprint(attr_bp)
 
     #product
-    from IIIflask_shop.product import product_bp
+    from product import product_bp
     app.register_blueprint(product_bp)
 
     return app
-
-
-
-
-

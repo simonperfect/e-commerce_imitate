@@ -1,7 +1,20 @@
-from flask_restful import Resource,reqparse
-from IIIflask_shop import models,db
-from IIIflask_shop.category import cate_api,attr_api
+import sys
+import os
+
+# 添加路徑
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
+
+# 導入第三方庫
 from flask import request
+from flask_restful import Resource, reqparse
+
+# 導入項目模塊
+from category import cate_api, attr_api
+from models import db
+from models import Category, Attribute
 
 
 class Categorys(Resource):

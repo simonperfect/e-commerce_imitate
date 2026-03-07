@@ -1,5 +1,6 @@
 #創建數據庫表格
-from IIIflask_shop import db
+from flask_sqlalchemy import SQLAlchemy
+db = SQLAlchemy()
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
