@@ -8,7 +8,7 @@ from flask_migrate import Migrate
 
 
 #引入config
-from config import config_map
+from .config import config_map
 
 #創建SQLAlchemy實例
 db = SQLAlchemy()
