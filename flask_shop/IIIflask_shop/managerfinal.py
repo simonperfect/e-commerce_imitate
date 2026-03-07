@@ -1,4 +1,4 @@
-from . import create_app,db
+from  __init__ import create_app, db
 from flask_migrate import Migrate
 from flask_cors import CORS     # pip install flask_cors==3.0.10
 
