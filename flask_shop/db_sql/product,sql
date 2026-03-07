@@ -1,0 +1,17 @@
+INSERT INTO t_product (name, price, number, introduce, big_img, small_img, state, cid_one, cid_two, cid_three, weight, hot_number, is_promote)
+VALUES ('SOULKISS Aloof & Edgy Style 16 Momme Mulberry Silk Crepe de Chine Slimming Halter Off-Shoulder Dress', 879.99, 100, 'product', '', '', 2, 1, 17, 65, 100, 30, 1);
+
+INSERT INTO t_product (name, price, number, introduce, big_img, small_img, state, cid_one, cid_two, cid_three, weight, hot_number, is_promote)
+VALUES ('AmandaX Custom Heavyweight Luxe Silk Jacquard Raglan Sleeve A-Line Dress', 879.99, 100, 'product', '', '', 2, 1, 17, 65, 100, 30, 1);
+
+INSERT INTO t_product (name, price, number, introduce, big_img, small_img, state, cid_one, cid_two, cid_three, weight, hot_number, is_promote)
+VALUES ('AmandaX Custom 30 Momme 2-Color Satin Adjustable V-Neck Slip Dress', 1380, 100, 'product', '', '', 2, 1, 17, 65, 100, 30, 1);
+
+INSERT INTO t_product (name, price, number, introduce, big_img, small_img, state, cid_one, cid_two, cid_three, weight, hot_number, is_promote)
+VALUES ('Women''s V-Neck Floral Print Chiffon A-Line Vintage Midi Dress with Slip, Summer 2020 New', 359.00, 100, 'product', '', '', 2, 1, 17, 65, 100, 30, 1);
+
+INSERT INTO t_product (name, price, number, introduce, big_img, small_img, state, cid_one, cid_two, cid_three, weight, hot_number, is_promote)
+VALUES ('4/17 Order ^_^ Xiao Ting Version - Gentle Lady Style White Floral Waist-Cinching Long Dress (Summer 2020)', 1399.99, 100, 'product', '', '', 2, 1, 17, 65, 100, 30, 1);
+
+INSERT INTO t_product (name, price, number, introduce, big_img, small_img, state, cid_one, cid_two, cid_three, weight, hot_number, is_promote)
+VALUES ('[Sisi France Agent] SANDRO Spring-Summer 2020 Lace Hollow-Out Dress Women''s SFPRO01010 R20568E', 1386, 100, 'product', '', '', 2, 1, 17, 65, 100, 30, 1);

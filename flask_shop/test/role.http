@@ -1,0 +1,51 @@
+### get the character list
+GET http://127.0.0.1:5000/roles/
+
+
+###add role
+
+POST http://localhost:5000/roles/
+Content-Type: application/json
+
+{
+    "name":"Glory adminstrator",
+    "desc":"Glory adminstrator is VIPP"
+}
+ 
+
+
+###delete role
+
+
+DELETE http://localhost:5000/role/2/
+
+
+
+### edit role
+
+PUT http://127.0.0.1:5000/role/3/
+Content-Type: application/json
+
+{
+    "name":"Glory adminstratorI",
+    "desc":"Glory adminstrator is VIP"
+} 
+
+
+
+### delete designated role's menu
+GET http://localhost:5000/role/1/1/
+
+
+
+### assign authority to specified role
+
+POST http://localhost:5000/role/3/ 
+Content-Type: application/json
+
+{
+   "mids":"1,11,2,21"  
+}
+
+
+ 

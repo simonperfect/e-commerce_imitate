@@ -1,0 +1,100 @@
+###測試用戶登錄功能
+
+POST http://localhost:5000/user/login/
+Content-Type:application/json
+
+{
+    "name":"shek3",
+    "pwd":"123456"
+
+}
+
+
+
+### 測試用戶register功能
+
+POST http://localhost:5000/user/register/
+Content-Type: application/json
+
+{
+    "name": "lvbu5",
+    "pwd":"123456",
+    "real_pwd":"123456",
+    "email":"sad@qq.com",
+    "phone":"18795556761",
+    "nick_name":"lvbu",
+    "role_id":3    
+    
+}
+
+
+
+###測試登錄裝飾器是否有用
+
+GET http://127.0.0.1:5000/user/test/
+token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZXhwIjoxNzY2ODA4MjI5LjM4NDIzOX0.gBDjpNYUHiHs4P_UNBCs-XZz-2iS4uPUcEcJV2t-6Y0
+
+
+
+
+
+
+
+###測試獲取菜單 tree
+
+Get http://localhost:5000/menu/menus/?type_=tree
+
+
+ 
+###測試獲取菜單 menu list
+
+Get http://localhost:5000/menu/menus/?type_=list
+
+
+
+
+
+###測試根據ID獲取單個用戶
+ # 2 is id
+Get http://localhost:5000/user/user/2/  
+
+
+###test to get user list
+
+GET http://localhost:5000/user/register/
+
+
+
+
+###測試獲取用戶列表  register get
+
+GET http://localhost:5000/user/register/?name=baizhan
+
+
+
+
+###測試用戶修改功能
+
+PUT http://localhost:5000/user/user/2/
+Content-Type: application/json
+
+{
+    "email":"110@gmail.com",
+    "phone":"11122555569",
+    "nick_name":"jason",
+    "role_id":1
+}
+
+
+
+###測試用戶刪除功能
+
+DELETE http://localhost:5000/user/user/3/
+
+
+
+###測試用戶reset password
+GET http://localhost:5000/user/reset_pwd/2/
+
+
+

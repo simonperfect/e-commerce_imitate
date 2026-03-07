@@ -1,0 +1,7 @@
+### get the product list
+GET http://localhost:5000/products/
+
+
+### delete the product individually
+
+DELETE http://localhost:5000/product/6/

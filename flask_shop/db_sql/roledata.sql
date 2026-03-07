@@ -1,0 +1,1 @@
+insert into t_role(name, `desc`) VALUES('manager', 'normal authority')

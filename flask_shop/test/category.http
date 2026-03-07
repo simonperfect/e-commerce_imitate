@@ -1,0 +1,14 @@
+### add merchandise catory
+POST http://localhost:5000/categorys/
+content-type: application/json
+
+{
+    "name":"Iphone",
+    "level":3,
+    "pid":28
+
+}
+
+
+###get merchandise category list
+GET http://localhost:5000/categorys/?pnum=3&psize=2
