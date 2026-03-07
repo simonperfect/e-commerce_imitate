@@ -46,4 +46,8 @@ python -c "from managerfinal import create_app, db; app = create_app('develop');
 '''
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    import os
+   #Get the port from the environment variable. Render will automatically set this variable. If not found, 5000 will be used as the local fallback.
+    port = int(os.environ.get('PORT', 5000))
+    # Start the application and listen on all network interfaces ('0.0.0.0') so that the Render's proxy can forward external requests.
+    app.run(host='0.0.0.0', port=port, debug=False) # When deploying to a production environment, it is recommended to set debug to False.
