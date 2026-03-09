@@ -2,7 +2,9 @@
 1 存放所有API接口地址   */
 
 const base = {
-    baseURL: 'http://localhost:5000',             //server address
+        baseURL: process.env.NODE_ENV === 'development' 
+        ? 'http://localhost:5000'                    // 本地開發
+        : 'https://e-commerce-imitate.onrender.com',      // 線上部署
     login:'/user/login/',                    //login address
     get_menu:'/menu/menus/?type_=tree',                     //get the menu
     get_menu_list:'/menu/menus/',
@@ -27,4 +29,3 @@ const base = {
 }
 
 export default base
-

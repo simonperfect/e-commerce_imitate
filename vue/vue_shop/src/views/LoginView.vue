@@ -86,6 +86,10 @@ const submitForm = (formRef) => {
                     router.push('/')     //  '/'跳轉主頁
                 }else{
                     ElMessage.warning({message: res.data.msg})
+                                        ElMessage({                      //錯誤彈窗
+                    message: res.data.msg,
+                    type: 'danger'
+                    })
                 }
                 
             })
