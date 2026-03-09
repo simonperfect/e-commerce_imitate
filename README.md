@@ -2,7 +2,7 @@ E-commerce Simulation System
 
 Architecture: Engineered a decoupled full-stack platform using Vue.js (Frontend) and Flask (Backend)in flask_shop.IIIflask_shop file, deployed on Vercel and Render respectively.
 
-Deployed a production-ready environment using Vercel and Render, managing CI/CD pipelines and cross-origin resource sharing (CORS).
+Deployed a production-ready environment using Vercel and Render and uptimerobot, managing CI/CD pipelines and cross-origin resource sharing (CORS).
 
 Data Management: Designed and optimized relational schemas using SQL to ensure data integrity for user transactions and inventory management.
 
