@@ -30,7 +30,7 @@ class Categorys(Resource):
 
             
 
-        base_query = models.Category.query.filter(models.Category.level==1)
+        base_query = Category.query.filter(Category.level==1)
         if all([pnum,psize]):
             # pagination
             cates = base_query.paginate(page=int(pnum),per_page=int(psize))
@@ -75,9 +75,9 @@ class Categorys(Resource):
             args = parser.parse_args()
             #test whether it has pid
             if args.get('pid'):
-                c = models.Category(name=args.get('name'),level=args.get('level'),pid=args.get('pid'))
+                c = Category(name=args.get('name'),level=args.get('level'),pid=args.get('pid'))
             else:
-                c = models.Category(name=args.get('name'),level=args.get('level'))
+                c = Category(name=args.get('name'),level=args.get('level'))
             
             db.session.add(c)
             db.session.commit()
@@ -98,7 +98,7 @@ class Attributes(Resource):
         parser.add_argument('_type',type=str,required=True,location='args')
 
         args = parser.parse_args()
-        cate = models.Category.query.get(args.get('cid'))
+        cate = Category.query.get(args.get('cid'))
         attrs_list=[]
         if args.get('_type') == 'static':
             attrs_list = [a.to_dict() for a in cate.attrs if a._type == 'static']
@@ -120,9 +120,9 @@ class Attributes(Resource):
             args = parser.parse_args()
 
             if args.get('val'):
-                c = models.Attribute(name=args.get('name'),val=args.get('val'),_type=args.get('_type'),cid=args.get('cid'))
+                c = Attribute(name=args.get('name'),val=args.get('val'),_type=args.get('_type'),cid=args.get('cid'))
             else:
-                c = models.Attribute(name=args.get('name'),_type=args.get('_type'),cid=args.get('cid'))
+                c = Attribute(name=args.get('name'),_type=args.get('_type'),cid=args.get('cid'))
 
             db.session.add(c)
             db.session.commit()
@@ -140,7 +140,7 @@ attr_api.add_resource(Attributes,'/attributes/')
 class Attribute(Resource):     #inividual
     def get(self,id):
         try:
-            attr = models.Attribute.query.get(id)
+            attr = Attribute.query.get(id)
             return{'static':200,'msg':'got the attribute successfully','data':attr.to_dict()}
         
         except Exception as e:
@@ -149,7 +149,7 @@ class Attribute(Resource):     #inividual
         
     def put(self,id):
         try:
-            attr = models.Attribute.query.get(id)
+            attr = Attribute.query.get(id)
             parser = reqparse.RequestParser()
 
             parser.add_argument('name',type=str)
@@ -175,7 +175,7 @@ class Attribute(Resource):     #inividual
             return {'status':500,'msg':'failed to edit the attribution'}
     def delete(self,id):
         try:
-            attr = models.Attribute.query.get(id)
+            attr = Attribute.query.get(id)
 
             db.session.delete(attr)
             db.session.commit()

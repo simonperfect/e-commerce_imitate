@@ -27,6 +27,8 @@ def index():
 
 #用戶登入功能
 @user_bp.route('/login/',methods = ['POST'])   #POST：提交/创建数据
+#用戶登入功能
+@user_bp.route('/login/',methods = ['POST'])   #POST：提交/创建数据
 def login():
     '''獲取用戶名''' 
     #name = request.form.get('name')    #content_type: application/x-www-form-urlencoded   form
@@ -39,7 +41,7 @@ def login():
     '''判斷是否正確'''
     #判斷傳遞數據完整
     if not all([name,pwd]):      #e.g.  all([True,False])    返回False      true true 返回true   也就是name 和 pwd其中一個是false 的話  就會return
-        return {'status':400,'msg':'參數不完整'}
+        return {'status':400,'msg':'Incomplete parameters'},400
     else:
         #查詢數據庫   通過用戶名獲取用戶對象
         user = Userform.query.filter(Userform.name == name).first()
@@ -51,11 +53,11 @@ def login():
                 token = generate_token({'id':user.id})
                 #獲取token解析的值
                 print(verify_token(token))
-                return {'msg':'登錄成功', 'data': {'token':token},"status":200}
+                return {'msg':'Login successful', 'data': {'token':token},"status":200}
             else:
-                return {'msg':'用戶名或者密碼錯誤', 'status': 400}
+                return {'msg':'Username or password incorrect', 'status': 400},400
         else:
-            return {'msg':'用戶名或者密碼錯誤','status':400 }
+            return {'msg':'Username or password incorrect','status':400 },400
     
 
 

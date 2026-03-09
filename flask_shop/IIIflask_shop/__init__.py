@@ -1,16 +1,25 @@
 #轉移manager配置對象過來
+import sys
+import os
+
+# 添加上層目錄 (flask_shop) 到 Python 路徑
+parent_dir = os.path.dirname(os.path.dirname(__file__))  # 這是 flask_shop 目錄
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
 
 from flask import Flask
-import os        
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from extensions import db
 
-
-#引入config
+# 現在可以導入 config
 from config import config_map
 
-#創建SQLAlchemy實例
-db = SQLAlchemy()
+
+
+
+
+
+
 
 
 def create_app(config_name):

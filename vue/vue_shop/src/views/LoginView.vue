@@ -72,31 +72,16 @@ const resetForm = () => {     // formRef這是參數，名字由你決定   ()=>
 const submitForm = (formRef) => {
     formRef.validate((valid) => {
         if (valid) {
-            console.log('subimit validate!')
-            api.login(user.value).then(res=>{
-                //根據響應的結果處理
-                if (res.data.status==200){
-                    ElMessage({                      //錯誤彈窗
-                    message: res.data.msg,
-                    type: 'success'
-                    })
-                    //把登錄成功後獲得的 token（身份令牌）暫時保存到瀏覽器裡
-                    sessionStorage.setItem('token',res.data.data.token)     //token是key   res.data.token是token的value
-                    //登錄成功后，跳轉到首頁
-                    router.push('/')     //  '/'跳轉主頁
-                }else{
-                    ElMessage.warning({message: res.data.msg})
-                                        ElMessage({                      //錯誤彈窗
-                    message: res.data.msg,
-                    type: 'danger'
-                    })
-                }
-                
-            })
-        }
-        else {
-            console.log('error submit!')
-            return false;
+            api.login(user.value)
+                .then(res => {
+                    ElMessage.success(res.data.msg)  // 會顯示 "Login successful"
+                    sessionStorage.setItem('token', res.data.data.token)
+                    router.push('/')
+                })
+                .catch(error => {
+                    const errorMsg = error.response?.data?.msg || 'Login failed'
+                    ElMessage.error(errorMsg)  // 會顯示 "Username or password incorrect"
+                })
         }
     })
 }
