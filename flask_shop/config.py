@@ -17,9 +17,6 @@ class Config:
     JSON_AS_ASCII = False
     RESTFUL_JSON = {'ensure_ascii': False}
 
-    # Base class should not set SQLALCHEMY_DATABASE_URI, it will be set by subclasses
-    SQLALCHEMY_DATABASE_URI = None
-
     SECRET_KEY = os.environ.get('SECRET_KEY', os.urandom(16))
 
     # Set debug mode based on environment variable
@@ -27,64 +24,42 @@ class Config:
 
 class DevelopmentConfig(Config):     # Development version
     DEBUG = True
-    
-    def __init__(self):
-        # Development environment forces using MySQL
-        self.SQLALCHEMY_DATABASE_URI = (
-            f'mysql+pymysql://root:root@localhost:3306/flask_shop?charset=utf8mb4'
-        )
-        print("="*60)
-        print("🔧 Development Configuration Loaded")
-        print(f"📊 Database: {self.SQLALCHEMY_DATABASE_URI}")
-        print(f"🐛 Debug mode: {self.DEBUG}")
-        print("="*60)
+    # Development environment forces using MySQL
+    SQLALCHEMY_DATABASE_URI = (
+        f'mysql+pymysql://root:root@localhost:3306/flask_shop?charset=utf8mb4'
+    )
 
 class ProductionConfig(Config):
     """Production environment configuration - Uses only DATABASE_URL"""
     DEBUG = False
-
-    def __init__(self):
+    
+    # Directly set class attribute at definition time
+    # This runs when the module is imported, not when Flask loads the config
+    _database_url = os.environ.get('DATABASE_URL')
+    
+    if not _database_url:
         print("="*60)
-        print("🏭 Loading Production Configuration")
-
-        # Get DATABASE_URL from environment variables
-        database_url = os.environ.get('DATABASE_URL')
-
-        # Check if DATABASE_URL exists and is not empty
-        if not database_url:
-            error_msg = (
-                "\n" + "="*60 + "\n" +
-                "❌ FATAL ERROR: Production configuration failed!\n"
-                "Environment variable 'DATABASE_URL' is not set or is empty.\n"
-                "Please set DATABASE_URL in Render Dashboard's Environment page.\n" +
-                "="*60
-            )
-            print(error_msg)
-            raise ValueError("DATABASE_URL environment variable not set for production!")
-
-        # Set database URI
-        self.SQLALCHEMY_DATABASE_URI = database_url
-        print(f"✅ Successfully read DATABASE_URL")
-        # Only print prefix to avoid exposing sensitive information
-        print(f"📊 Database URI prefix: {database_url[:20]}...")
-        
-        # Ensure parent class configurations are properly inherited
-        self.SECRET_KEY = os.environ.get('SECRET_KEY', os.urandom(16))
+        print("🏭 Production Configuration")
+        print("❌ FATAL ERROR: DATABASE_URL environment variable is not set!")
+        print("Please set DATABASE_URL in Render Dashboard's Environment page.")
+        print("="*60)
+        # This will cause the application to fail at import time
+        SQLALCHEMY_DATABASE_URI = None
+    else:
+        SQLALCHEMY_DATABASE_URI = _database_url
+        print("="*60)
+        print("🏭 Production Configuration Loaded")
+        print(f"✅ DATABASE_URL found")
+        print(f"📊 Database URI prefix: {_database_url[:20]}...")
         print("="*60)
 
 class TestingConfig(Config):      # Testing version
     DEBUG = True
     TESTING = True
-    
-    def __init__(self):
-        self.SQLALCHEMY_DATABASE_URI = (
-            f'mysql+pymysql://{self.MYSQL_USERNAME}:{self.MYSQL_PASSWORD}@'
-            f'{self.MYSQL_HOST}:{self.MYSQL_PORT}/{self.MYSQL_DATABASE}_test?charset={self.MYSQL_CHARSET}'
-        )
-        print("="*60)
-        print("🧪 Testing Configuration Loaded")
-        print(f"📊 Database: {self.SQLALCHEMY_DATABASE_URI}")
-        print("="*60)
+    SQLALCHEMY_DATABASE_URI = (
+        f'mysql+pymysql://{Config.MYSQL_USERNAME}:{Config.MYSQL_PASSWORD}@'
+        f'{Config.MYSQL_HOST}:{Config.MYSQL_PORT}/{Config.MYSQL_DATABASE}_test?charset={Config.MYSQL_CHARSET}'
+    )
 
 # Configuration mapping
 config_map = {
