@@ -17,30 +17,18 @@ from config import config_map
 def create_app(config_name):
     app = Flask(__name__)
 
-    # ===== PRIORITY 1: SET DATABASE URI DIRECTLY FROM ENVIRONMENT =====
-    import os
-    database_url = os.environ.get('DATABASE_URL')
-    if database_url:
-        app.config['SQLALCHEMY_DATABASE_URI'] = database_url
-        print("="*60)
-        print("✅ DATABASE URI SET DIRECTLY FROM ENVIRONMENT")
-        print(f"📊 Database URI prefix: {database_url[:20]}...")
-        print("="*60)
-    else:
-        print("="*60)
-        print("❌ ERROR: DATABASE_URL NOT FOUND IN ENVIRONMENT")
-        print("="*60)
-    # ==================================================================
-
-    # Get configuration class based on config_name
-    Config = config_map.get(config_name)  # config_map contains 'develop', 'product', or 'test'
+    # 獲取配置類
+    Config = config_map.get(config_name)
+    print(f"🔍 Config class: {Config}")
     
-    # Load configuration settings into Flask app
-    if Config:
-        print(f"🔧 Loading additional config from: {config_name}")
-        app.config.from_object(Config)
+    # 載入配置
+    app.config.from_object(Config)
     
-    # Initialize db
+    # 立即檢查
+    db_uri = app.config.get('SQLALCHEMY_DATABASE_URI')
+    print(f"🔍 After from_object, SQLALCHEMY_DATABASE_URI = {db_uri}")
+    
+    # 初始化db
     db.init_app(app)
     
     # Get user blueprint - use sys.path to add current directory
