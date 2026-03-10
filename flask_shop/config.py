@@ -1,9 +1,9 @@
-#轉移IIIflask_shop的 config到這裏   
+#Transfer the config of IIIflask_shop to here
 
 import os
 
 class Config:
-    # 從環境變量讀取數據庫配置，如果沒有則用默認值
+    # Read database configuration from environment variables, use default values if not set
     MYSQL_DIALECT = os.environ.get('MYSQL_DIALECT', 'mysql')
     MYSQL_DRIVER = os.environ.get('MYSQL_DRIVER', 'pymysql')
     MYSQL_USERNAME = os.environ.get('MYSQL_USERNAME', 'root')
@@ -13,68 +13,82 @@ class Config:
     MYSQL_DATABASE = os.environ.get('MYSQL_DATABASE', 'flask_shop')
     MYSQL_CHARSET = os.environ.get('MYSQL_CHARSET', 'utf8mb4')
 
-    # 確保能輸出中文
+    # Ensure Chinese characters display correctly
     JSON_AS_ASCII = False
     RESTFUL_JSON = {'ensure_ascii': False}
 
-    # 如果設置了 DATABASE_URL，優先使用（Render PostgreSQL 專用）
-    DATABASE_URL = os.environ.get('DATABASE_URL')
-    if DATABASE_URL:
-        SQLALCHEMY_DATABASE_URI = DATABASE_URL
-    else:
-        # 否則使用 MySQL 配置
-        SQLALCHEMY_DATABASE_URI = (
-            f'{MYSQL_DIALECT}+{MYSQL_DRIVER}://{MYSQL_USERNAME}:{MYSQL_PASSWORD}@'
-            f'{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}?charset={MYSQL_CHARSET}'
-        )
+    # Base class should not set SQLALCHEMY_DATABASE_URI, it will be set by subclasses
+    SQLALCHEMY_DATABASE_URI = None
 
     SECRET_KEY = os.environ.get('SECRET_KEY', os.urandom(16))
 
-    # 根據環境設置調試模式
+    # Set debug mode based on environment variable
     DEBUG = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
 
-class DevelopmentConfig(Config):     #開發版本
+class DevelopmentConfig(Config):     # Development version
     DEBUG = True
-    # 開發環境強制使用 MySQL
-    SQLALCHEMY_DATABASE_URI = (
-        f'mysql+pymysql://root:root@localhost:3306/flask_shop?charset=utf8mb4'
-    )
+    
+    def __init__(self):
+        # Development environment forces using MySQL
+        self.SQLALCHEMY_DATABASE_URI = (
+            f'mysql+pymysql://root:root@localhost:3306/flask_shop?charset=utf8mb4'
+        )
+        print("="*60)
+        print("🔧 Development Configuration Loaded")
+        print(f"📊 Database: {self.SQLALCHEMY_DATABASE_URI}")
+        print(f"🐛 Debug mode: {self.DEBUG}")
+        print("="*60)
 
 class ProductionConfig(Config):
-    """生產環境配置 - 僅使用 DATABASE_URL"""
+    """Production environment configuration - Uses only DATABASE_URL"""
     DEBUG = False
 
     def __init__(self):
         print("="*60)
-        print("🏭 正在載入生產環境配置 (ProductionConfig)")
+        print("🏭 Loading Production Configuration")
 
-        # 從環境變數獲取 DATABASE_URL
+        # Get DATABASE_URL from environment variables
         database_url = os.environ.get('DATABASE_URL')
 
-        # 檢查 DATABASE_URL 是否存在且不為空
+        # Check if DATABASE_URL exists and is not empty
         if not database_url:
             error_msg = (
                 "\n" + "="*60 + "\n" +
-                "❌ 致命錯誤：生產環境配置失敗！\n"
-                "環境變數 'DATABASE_URL' 未設定或為空。\n"
-                "請在 Render Dashboard 的 Environment 頁面中設定 DATABASE_URL。\n" +
+                "❌ FATAL ERROR: Production configuration failed!\n"
+                "Environment variable 'DATABASE_URL' is not set or is empty.\n"
+                "Please set DATABASE_URL in Render Dashboard's Environment page.\n" +
                 "="*60
             )
             print(error_msg)
             raise ValueError("DATABASE_URL environment variable not set for production!")
 
-        # 設定數據庫 URI
+        # Set database URI
         self.SQLALCHEMY_DATABASE_URI = database_url
-        print(f"✅ 成功讀取 DATABASE_URL")
-        print(f"📊 數據庫 URI 前綴: {database_url[:20]}...") # 只打印前綴，避免顯示敏感信息
+        print(f"✅ Successfully read DATABASE_URL")
+        # Only print prefix to avoid exposing sensitive information
+        print(f"📊 Database URI prefix: {database_url[:20]}...")
+        
+        # Ensure parent class configurations are properly inherited
+        self.SECRET_KEY = os.environ.get('SECRET_KEY', os.urandom(16))
         print("="*60)
 
-class TestingConfig(Config):      #測試版本
+class TestingConfig(Config):      # Testing version
     DEBUG = True
     TESTING = True
+    
+    def __init__(self):
+        self.SQLALCHEMY_DATABASE_URI = (
+            f'mysql+pymysql://{self.MYSQL_USERNAME}:{self.MYSQL_PASSWORD}@'
+            f'{self.MYSQL_HOST}:{self.MYSQL_PORT}/{self.MYSQL_DATABASE}_test?charset={self.MYSQL_CHARSET}'
+        )
+        print("="*60)
+        print("🧪 Testing Configuration Loaded")
+        print(f"📊 Database: {self.SQLALCHEMY_DATABASE_URI}")
+        print("="*60)
 
+# Configuration mapping
 config_map = {
-    'develop': DevelopmentConfig,    #開發模式
-    'product': ProductionConfig,   #生產模式
-    'test': TestingConfig      #測試環境
+    'develop': DevelopmentConfig,    # Development mode
+    'product': ProductionConfig,     # Production mode
+    'test': TestingConfig            # Testing environment
 }
