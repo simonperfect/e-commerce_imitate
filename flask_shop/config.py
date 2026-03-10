@@ -40,9 +40,34 @@ class DevelopmentConfig(Config):     #開發版本
         f'mysql+pymysql://root:root@localhost:3306/flask_shop?charset=utf8mb4'
     )
 
-class ProductionConfig(Config):   #生產版本 
+class ProductionConfig(Config):
+    """生產環境配置 - 僅使用 DATABASE_URL"""
     DEBUG = False
-    # 生產環境會自動使用 DATABASE_URL 環境變量
+
+    def __init__(self):
+        print("="*60)
+        print("🏭 正在載入生產環境配置 (ProductionConfig)")
+
+        # 從環境變數獲取 DATABASE_URL
+        database_url = os.environ.get('DATABASE_URL')
+
+        # 檢查 DATABASE_URL 是否存在且不為空
+        if not database_url:
+            error_msg = (
+                "\n" + "="*60 + "\n" +
+                "❌ 致命錯誤：生產環境配置失敗！\n"
+                "環境變數 'DATABASE_URL' 未設定或為空。\n"
+                "請在 Render Dashboard 的 Environment 頁面中設定 DATABASE_URL。\n" +
+                "="*60
+            )
+            print(error_msg)
+            raise ValueError("DATABASE_URL environment variable not set for production!")
+
+        # 設定數據庫 URI
+        self.SQLALCHEMY_DATABASE_URI = database_url
+        print(f"✅ 成功讀取 DATABASE_URL")
+        print(f"📊 數據庫 URI 前綴: {database_url[:20]}...") # 只打印前綴，避免顯示敏感信息
+        print("="*60)
 
 class TestingConfig(Config):      #測試版本
     DEBUG = True
