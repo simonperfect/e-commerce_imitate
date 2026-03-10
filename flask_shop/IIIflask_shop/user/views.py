@@ -229,3 +229,31 @@ def reset_pwd(id):
 @login_required
 def test_login_required():
     return{'status':200, 'msg':'通過驗證'}
+
+
+
+@user_bp.route('/init_test_user', methods=['GET'])
+def init_test_user():
+    from werkzeug.security import generate_password_hash
+    from extensions import db
+    from models import Userform
+    
+    try:
+        # 檢查用戶是否已存在
+        user = Userform.query.filter(Userform.name == 'admin').first()
+        if user:
+            return {'msg': '測試用戶已存在', 'user': user.name}
+        
+        # 創建新用戶
+        test_user = Userform(
+            name='admin',
+            pwd=generate_password_hash('123456'),
+            nick_name='Admin'
+        )
+        db.session.add(test_user)
+        db.session.commit()
+        
+        return {'msg': '測試用戶創建成功！用戶名: admin, 密碼: 123456'}
+    
+    except Exception as e:
+        return {'msg': f'創建失敗: {str(e)}'}, 500
