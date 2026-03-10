@@ -17,22 +17,28 @@ from config import config_map
 def create_app(config_name):
     app = Flask(__name__)
 
-    #Get configuration class based on config_name
+    # ===== PRIORITY 1: SET DATABASE URI DIRECTLY FROM ENVIRONMENT =====
+    import os
+    database_url = os.environ.get('DATABASE_URL')
+    if database_url:
+        app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+        print("="*60)
+        print("✅ DATABASE URI SET DIRECTLY FROM ENVIRONMENT")
+        print(f"📊 Database URI prefix: {database_url[:20]}...")
+        print("="*60)
+    else:
+        print("="*60)
+        print("❌ ERROR: DATABASE_URL NOT FOUND IN ENVIRONMENT")
+        print("="*60)
+    # ==================================================================
+
+    # Get configuration class based on config_name
     Config = config_map.get(config_name)  # config_map contains 'develop', 'product', or 'test'
     
     # Load configuration settings into Flask app
-    app.config.from_object(Config)
-    
-    # ===== CRITICAL FIX: Ensure database URI is set =====
-    # If no database URI is configured, force set from environment variable
-    if not app.config.get('SQLALCHEMY_DATABASE_URI'):
-        database_url = os.environ.get('DATABASE_URL')
-        if database_url:
-            app.config['SQLALCHEMY_DATABASE_URI'] = database_url
-            print(f"✅ Database URI set from environment variable: {database_url[:20]}...")
-        else:
-            print("❌ ERROR: No database URI configured and DATABASE_URL not found!")
-    # ====================================================
+    if Config:
+        print(f"🔧 Loading additional config from: {config_name}")
+        app.config.from_object(Config)
     
     # Initialize db
     db.init_app(app)
