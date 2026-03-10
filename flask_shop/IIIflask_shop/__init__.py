@@ -1,9 +1,9 @@
-#轉移manager配置對象過來
+#Transfer manager configuration object here
 import sys
 import os
 
-# 添加上層目錄 (flask_shop) 到 Python 路徑
-parent_dir = os.path.dirname(os.path.dirname(__file__))  # 這是 flask_shop 目錄
+# Add upper directory (flask_shop) to Python path
+parent_dir = os.path.dirname(os.path.dirname(__file__))  # This is flask_shop directory
 if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
 
@@ -11,60 +11,58 @@ from flask import Flask
 from flask_migrate import Migrate
 from extensions import db
 
-# 現在可以導入 config
+# Now we can import config
 from config import config_map
-
-
-
-
-
-
-
-
 
 def create_app(config_name):
     app = Flask(__name__)
 
-
-
-    #根據config_name 獲取配置類
-    Config = config_map.get(config_name)     #config_map裏面的  develop product 或者test
+    #Get configuration class based on config_name
+    Config = config_map.get(config_name)  # config_map contains 'develop', 'product', or 'test'
     
-    # 將配置類中的設置加載到 Flask 應用
-    app.config.from_object(Config)      #如果不適用class config的話 就是app.config[SQLCHEMY_DATABASE_URI] = 'SQLALCHEMY_DATABASE_URI'  
+    # Load configuration settings into Flask app
+    app.config.from_object(Config)
     
-    #初始化db
+    # ===== CRITICAL FIX: Ensure database URI is set =====
+    # If no database URI is configured, force set from environment variable
+    if not app.config.get('SQLALCHEMY_DATABASE_URI'):
+        database_url = os.environ.get('DATABASE_URL')
+        if database_url:
+            app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+            print(f"✅ Database URI set from environment variable: {database_url[:20]}...")
+        else:
+            print("❌ ERROR: No database URI configured and DATABASE_URL not found!")
+    # ====================================================
+    
+    # Initialize db
     db.init_app(app)
     
-    #獲取藍圖user - 使用 sys.path 添加當前目錄
+    # Get user blueprint - use sys.path to add current directory
     import sys
     import os
     sys.path.append(os.path.dirname(__file__))
     
     from user import user_bp
-    #注冊藍圖 第一個table   
+    # Register blueprint - first table
     app.register_blueprint(user_bp)
 
-
-    #第二個table
+    # Second table
     from menu import menu_bp
     app.register_blueprint(menu_bp)
 
-
-    #role character
+    # Role character
     from role import role_bp
     app.register_blueprint(role_bp)
 
-    #get category object
+    # Get category object
     from category import cate_bp
     app.register_blueprint(cate_bp)
 
-
-    #attribute from category
+    # Attribute from category
     from category import attr_bp
     app.register_blueprint(attr_bp)
 
-    #product
+    # Product
     from product import product_bp
     app.register_blueprint(product_bp)
 
