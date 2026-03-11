@@ -14,7 +14,7 @@
             <el-step title="Information of product" />
             <el-step title="Done" />
         </el-steps>
-        <el-tabs tab-position="left" class="el-tabs" v-model="active">   <!--v-model accomplishes the binding with el-steps when tab pane go to the second the el-steps will go to second pleace too-->
+        <el-tabs tab-position="left" class="el-tabs" v-model="active" :before-leave="beforeLeave">   <!--v-model accomplishes the binding with el-steps when tab pane go to the second the el-steps will go to second pleace too-->
             <el-form :model="addForm" ref="addFormRef" :rules="addFormRules">
                 <el-tab-pane label="basic information" :name="0">   <!-- name attribute is the default is ordinal number of the tab-pane in the sequence, e.g. the second default tab-pane is '1' a layer won't fall to first pane-->
                     <el-form-item label="name" prop="name">
@@ -60,6 +60,8 @@
 import { ArrowRight } from '@element-plus/icons-vue';
 import {ref,reactive,onMounted} from 'vue'
 import api from '../api/index.js'
+import { number } from 'echarts';
+import { ElMessage } from 'element-plus';
 
 const active = ref(0)     //0 is a int because the name attribute of el-tab-pane is a number {:name"0"} if it is a string the el-steps won't work
 
@@ -68,6 +70,9 @@ const addForm = reactive({
     price:'',
     number:'',
     weight:'',
+    cid_one:null,
+    cid_two:null,
+    cid_three:null,
 
 })
 
@@ -78,15 +83,15 @@ const addFormRules = reactive({
     ],
     price:[
         {required:true,message:'Please input the price of product',trigger:'blur'},
-        {type:'number',message:'Price should be a number',trigger:'blur'}
+        {type:'number',message:'Price should be a number',trigger:'blur',transform: (value) => Number(value)}
     ],
     number:[
         {required:true,message:'Please input the inventory of product',trigger:'blur'},
-        {type:'number',message:'Inventory should be a number',trigger:'blur'}
+        {type:'number',message:'Inventory should be a number',trigger:'blur',transform: (value) => Number(value)}
     ],
     weight:[
         {required:true,message:'Please input the weight of product',trigger:'blur'},
-        {type:'number',message:'Weight should be a number',trigger:'blur'}
+        {type:'number',message:'Weight should be a number',trigger:'blur',transform: (value) => Number(value)}
     ]
 })
 
@@ -121,8 +126,33 @@ const props = {               // 設定資料欄位與元件屬性的對應關�
 //Method triggered when the selected item changes.
 
 const changeSelect = (value) =>{
-     console.log(value)
+     //update table category ID
+    if(options.selectID){
+        if(options.selectID.length==3){
+            addForm.cid_one = options.selectID[0]
+            addForm.cid_two = options.selectID[1]
+            addForm.cid_three = options.selectID[2]
+        }
+    }
+    console.log(addForm)
 }
+
+
+//when click the next step button, the form will be validated first, if the validation is successful,it will jump to the next step
+const beforeLeave = (activeName,oldActiveNmae) =>{
+    if(options.selectID){
+        if(options.selectID.length==3){
+            return true
+        }
+    }
+    ElMessage({
+        type:'warning',
+        message:'Please select the category of product'
+    })
+    return false
+
+}
+
 </script>
 
 
