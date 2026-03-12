@@ -12,7 +12,7 @@ class Userform(db.Model,BaseModel):        # 繼承自父類：BaseModel   db.Mo
     __tablename__ = 't_users'
     id = db.Column(db.Integer,primary_key=True,autoincrement=True)
     name = db.Column(db.String(32), unique = True ,nullable = False)
-    pwd = db.Column(db.String(128))
+    pwd = db.Column(db.Text)
     nick_name = db.Column(db.String(32))
     phone = db.Column(db.String(11))
     email = db.Column(db.String(32))
