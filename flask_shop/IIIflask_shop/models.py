@@ -158,7 +158,7 @@ class Attribute(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(32),nullable=False)
     val = db.Column(db.String(255))
-    _type= db.Column(db.Enum('static','dynamic'))  #a row that can just store static or dynamic this two value
+    _type= db.Column(db.Enum('static','dynamic', name='attribute_type_enum'))  #a row that can just store static or dynamic this two value
 
     cid = db.Column(db.Integer, db.ForeignKey('t_category.id'))
 
