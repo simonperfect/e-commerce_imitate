@@ -11,4 +11,4 @@ DevOps: Managed continuous deployment and environment configurations, ensuring 9
  I did my test in my test file and db_sql file.
  Here is the website
  !!!!!!!!!!!!!!!!!!!!!!!https://e-commerce-imitate.vercel.app!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
- The administator username is shek2 and the password is 123456  you can try it. I will keep update
+ The administator username is admin and the password is 123456  you can try it. I will keep update
