@@ -1,3 +1,18 @@
-Pulsars: intermitten flashing  
-milky way: To the naked eye, the Milky Way appears as a static, white band; but under radio waves, it transforms into a vibrant, colorful, and constantly pulsating energy field.
-There are approximately 100 billion pulsars in our universe, like glowing dumbbells  but it's spinning wildly. The "flashes" we see are actually the two ends of this dumbbell, sweeping across our eyes rhythmically like fan blades.If we can see this immense number, which highlights the vastness of the cosmos, the once tranquil sky will become a giant rave! You will see countless flashing.some flashing dozens of times per second, others only once every few seconds—these are the beacons of the universe.
+Flask==3.1.2
+Flask-Cors==3.0.10
+Flask-Migrate==4.0.0
+Flask-RESTful==0.3.9
+Flask-SQLAlchemy==3.1.1
+PyMySQL==1.0.2
+gunicorn==20.1.0
+opencv-python==4.5.5.62
+numpy==1.23.1
+pillow==10.4.0
+imutils==0.5.4
+pupil-apriltags==1.0.4.post10
+PyJWT==2.10.1
+alembic==1.17.2
+python-dotenv==0.19.0
+setuptools==65.5.0
+psycopg2-binary==2.9.11
+waitress==3.0.2
