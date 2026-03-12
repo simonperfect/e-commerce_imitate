@@ -1,4 +1,4 @@
-from IIIflask_shop import create_app, db
+from __init__ import create_app, db
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask import request  # 加上這行
@@ -46,6 +46,24 @@ def init_db_route():
                 return {'message': '資料庫已存在，無需初始化'}
     except Exception as e:
         return {'error': str(e)}, 500
+
+
+@app.route('/test-jwt', methods=['GET'])
+def test_jwt():
+    from utils.token import generate_token, verify_token
+    try:
+        # 測試生成 token
+        token = generate_token({'test': 'data'})
+        print(f"Generated token: {token}")
+        
+        # 測試驗證 token
+        data = verify_token(token)
+        print(f"Verified data: {data}")
+        
+        return {'message': 'JWT test passed', 'token': token}
+    except Exception as e:
+        return {'error': str(e)}, 500
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=False)
